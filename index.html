@@ -170,6 +170,12 @@
       font-style: italic;
     }
 
+    .winner {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #facc15; /* jaune */
+    }
+
     .footer-hint {
       margin-top: 8px;
       font-size: 12px;
@@ -205,362 +211,161 @@
               <th colspan="3">Actions</th>
             </tr>
           </thead>
-          <tbody id="teamsTbody">
-            <!-- Lignes d'équipes générées en JS -->
-          </tbody>
+          <tbody id="teamsTbody"></tbody>
         </table>
 
         <div class="footer-hint">
-          💡 Clique sur + / − après chaque extrait pour mettre à jour les scores en direct.
+          💡 Les scores se mettent à jour automatiquement en fonction des réponses des joueurs.
         </div>
       </section>
 
-      <!-- SECTION QUESTIONS / EXTRAITS -->
+      <!-- SECTION QUESTIONS -->
       <section class="questions">
         <h2>Extraits du blind test</h2>
 
         <h3>Manche 1 – Comptines</h3>
-        <ol>
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 1</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <!-- Remplace le src ci-dessous par ton vrai fichier audio -->
-            <audio controls src="audio/comptine1.mp3"></audio>
-            <div class="answer" style="display:none;">Frère Jacques</div>
-          </li>
+        <ol id="listC"></ol>
 
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 2</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine2.mp3"></audio>
-            <div class="answer" style="display:none;">Une souris verte</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 3</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine3.mp3"></audio>
-            <div class="answer" style="display:none;">Pomme de reinette</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 4</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine4.mp3"></audio>
-            <div class="answer" style="display:none;">Ah ! vous dirai-je maman</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 5</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine5.mp3"></audio>
-            <div class="answer" style="display:none;">Alouette, gentille alouette</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 6</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine6.mp3"></audio>
-            <div class="answer" style="display:none;">Sur le pont d’Avignon</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 7</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine7.mp3"></audio>
-            <div class="answer" style="display:none;">La Mère Michel</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 8</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine8.mp3"></audio>
-            <div class="answer" style="display:none;">Savez-vous planter les choux ?</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 9</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine9.mp3"></audio>
-            <div class="answer" style="display:none;">Il était un petit navire</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Comptine 10</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/comptine10.mp3"></audio>
-            <div class="answer" style="display:none;">La famille Tortue</div>
-          </li>
-        </ol>
-
-        <h3>Manche 2 – Dessins animés de notre enfance</h3>
-        <ol>
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 1</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da1.mp3"></audio>
-            <div class="answer" style="display:none;">Pokémon</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 2</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da2.mp3"></audio>
-            <div class="answer" style="display:none;">Les Mystérieuses Cités d’Or</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 3</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da3.mp3"></audio>
-            <div class="answer" style="display:none;">Inspecteur Gadget</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 4</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da4.mp3"></audio>
-            <div class="answer" style="display:none;">Dragon Ball Z</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 5</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da5.mp3"></audio>
-            <div class="answer" style="display:none;">Dora l’Exploratrice</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 6</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da6.mp3"></audio>
-            <div class="answer" style="display:none;">Winnie l’Ourson</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 7</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da7.mp3"></audio>
-            <div class="answer" style="display:none;">Bob l’Éponge</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 8</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da8.mp3"></audio>
-            <div class="answer" style="display:none;">Totally Spies</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 9</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da9.mp3"></audio>
-            <div class="answer" style="display:none;">Olive et Tom</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 10</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da10.mp3"></audio>
-            <div class="answer" style="display:none;">Digimon</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 11</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da11.mp3"></audio>
-            <div class="answer" style="display:none;">Denver le dernier dinosaure</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 12</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da12.mp3"></audio>
-            <div class="answer" style="display:none;">Les Schtroumpfs</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 13</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da13.mp3"></audio>
-            <div class="answer" style="display:none;">Sailor Moon</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 14</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da14.mp3"></audio>
-            <div class="answer" style="display:none;">Les Tortues Ninja</div>
-          </li>
-
-          <li>
-            <div class="question-header">
-              <span><strong>Dessin animé 15</strong></span>
-              <button class="show-answer-btn small secondary">Afficher la réponse</button>
-            </div>
-            <audio controls src="audio/da15.mp3"></audio>
-            <div class="answer" style="display:none;">Les Minikeums</div>
-          </li>
-        </ol>
+        <h3>Manche 2 – Dessins animés</h3>
+        <ol id="listD"></ol>
 
         <div class="footer-hint">
-          💡 Tu pourras modifier les titres, l’ordre, les réponses et les fichiers audio directement dans ce fichier HTML.
+          💡 Le nom du gagnant s'affichera automatiquement sous chaque extrait.
         </div>
       </section>
     </div>
   </div>
 
-  <script>
-    // ======= GESTION DES ÉQUIPES & SCORES =======
-    const teamNameInput = document.getElementById('teamNameInput');
-    const addTeamBtn = document.getElementById('addTeamBtn');
-    const teamsTbody = document.getElementById('teamsTbody');
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-    let teams = []; // {id, name, score}
+  <script>
+    /****************************************************
+     * 🔥 CONFIG FIREBASE (DÉJÀ PRÊT)
+     ****************************************************/
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjiVAbYPQY5j2S6XxuXWJEPtl_IqVy3cI",
+      authDomain: "blind-test-74568.firebaseapp.com",
+      databaseURL: "https://blind-test-74568-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "blind-test-74568",
+      storageBucket: "blind-test-74568.firebasestorage.app",
+      messagingSenderId: "444315217646",
+      appId: "1:444315217646:web:d16300dd9833a3288d8dff"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const GAME_ID = "blindtest-bbcha";
+
+    /****************************************************
+     * 📌 Création dynamique des questions
+     ****************************************************/
+    const comptines = [
+      "Frère Jacques", "Une souris verte", "Pomme de reinette",
+      "Ah ! vous dirai-je maman", "Alouette, gentille alouette",
+      "Sur le pont d’Avignon", "La Mère Michel",
+      "Savez-vous planter les choux ?", "Il était un petit navire",
+      "La famille Tortue"
+    ];
+
+    const dessins = [
+      "Pokémon", "Les Mystérieuses Cités d’Or", "Inspecteur Gadget",
+      "Dragon Ball Z", "Dora l’Exploratrice", "Winnie l’Ourson",
+      "Bob l’Éponge", "Totally Spies", "Olive et Tom",
+      "Digimon", "Denver le dernier dinosaure", "Les Schtroumpfs",
+      "Sailor Moon", "Les Tortues Ninja", "Les Minikeums"
+    ];
+
+    const listC = document.getElementById("listC");
+    const listD = document.getElementById("listD");
+
+    function createQuestionLi(qid, title, audiofile) {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="question-header">
+          <span><strong>${title}</strong></span>
+        </div>
+
+        <audio controls src="audio/${audiofile}"></audio>
+
+        <div class="winner" id="winner-${qid}"></div>
+      `;
+      return li;
+    }
+
+    comptines.forEach((name, i) => {
+      listC.appendChild(createQuestionLi("C"+(i+1), name, "comptine"+(i+1)+".mp3"));
+    });
+
+    dessins.forEach((name, i) => {
+      listD.appendChild(createQuestionLi("D"+(i+1), name, "da"+(i+1)+".mp3"));
+    });
+
+    /****************************************************
+     * 👥 Gestion des équipes + scores
+     ****************************************************/
+    const teamNameInput = document.getElementById("teamNameInput");
+    const addTeamBtn = document.getElementById("addTeamBtn");
+    const teamsTbody = document.getElementById("teamsTbody");
+
+    let teamsCache = {};
 
     function renderTeams() {
       teamsTbody.innerHTML = "";
-      teams.forEach(team => {
-        const tr = document.createElement('tr');
+      const entries = Object.entries(teamsCache).sort((a,b)=>b[1].score - a[1].score);
 
-        const tdName = document.createElement('td');
-        tdName.className = 'team-name';
-        tdName.textContent = team.name;
-
-        const tdScore = document.createElement('td');
-        tdScore.className = 'score';
-        tdScore.textContent = team.score;
-
-        const tdMinus = document.createElement('td');
-        const btnMinus = document.createElement('button');
-        btnMinus.textContent = "−";
-        btnMinus.className = "small secondary";
-        btnMinus.addEventListener('click', () => updateScore(team.id, -1));
-        tdMinus.appendChild(btnMinus);
-
-        const tdPlus = document.createElement('td');
-        const btnPlus = document.createElement('button');
-        btnPlus.textContent = "+";
-        btnPlus.className = "small";
-        btnPlus.addEventListener('click', () => updateScore(team.id, 1));
-        tdPlus.appendChild(btnPlus);
-
-        const tdRemove = document.createElement('td');
-        const btnRemove = document.createElement('button');
-        btnRemove.textContent = "×";
-        btnRemove.className = "small danger";
-        btnRemove.addEventListener('click', () => removeTeam(team.id));
-        tdRemove.appendChild(btnRemove);
-
-        tr.appendChild(tdName);
-        tr.appendChild(tdScore);
-        tr.appendChild(tdMinus);
-        tr.appendChild(tdPlus);
-        tr.appendChild(tdRemove);
-
+      for (const [id, team] of entries) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="team-name">${team.name}</td>
+          <td class="score">${team.score}</td>
+          <td><button class="small secondary" onclick="updateScore('${id}', -1)">−</button></td>
+          <td><button class="small" onclick="updateScore('${id}', 1)">+</button></td>
+          <td><button class="small danger" onclick="removeTeam('${id}')">×</button></td>
+        `;
         teamsTbody.appendChild(tr);
-      });
+      }
     }
 
-    function addTeam(name) {
-      if (!name) return;
-      const team = {
-        id: Date.now().toString() + Math.random().toString(16).slice(2),
-        name: name,
-        score: 0
-      };
-      teams.push(team);
-      renderTeams();
+    function makeId(name){
+      return name.toLowerCase().replace(/\s+/g,"-");
     }
 
-    function updateScore(id, delta) {
-      const team = teams.find(t => t.id === id);
-      if (!team) return;
-      team.score += delta;
-      if (team.score < 0) team.score = 0;
-      renderTeams();
-    }
-
-    function removeTeam(id) {
-      teams = teams.filter(t => t.id !== id);
-      renderTeams();
-    }
-
-    addTeamBtn.addEventListener('click', () => {
+    addTeamBtn.onclick = () => {
       const name = teamNameInput.value.trim();
       if (!name) return;
-      addTeam(name);
+      const id = makeId(name);
+      db.ref(`games/${GAME_ID}/teams/${id}`).set({ name, score: 0 });
       teamNameInput.value = "";
-      teamNameInput.focus();
+    };
+
+    function updateScore(id, delta){
+      db.ref(`games/${GAME_ID}/teams/${id}/score`).transaction(s => (s||0) + delta);
+    }
+
+    function removeTeam(id){
+      db.ref(`games/${GAME_ID}/teams/${id}`).remove();
+    }
+
+    db.ref(`games/${GAME_ID}/teams`).on("value", snap => {
+      teamsCache = snap.val() || {};
+      renderTeams();
     });
 
-    teamNameInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        addTeamBtn.click();
+    /****************************************************
+     * 🏆 Affichage des gagnants en live
+     ****************************************************/
+    db.ref(`games/${GAME_ID}/winners`).on("value", snap => {
+      const data = snap.val() || {};
+      for (const qid in data) {
+        const div = document.getElementById("winner-"+qid);
+        if (div) {
+          div.textContent = "🏆 Gagnant : " + data[qid].teamName;
+        }
       }
     });
 
-    // ======= AFFICHAGE / MASQUAGE DES RÉPONSES =======
-    document.querySelectorAll('.show-answer-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const li = btn.closest('li');
-        if (!li) return;
-        const answerDiv = li.querySelector('.answer');
-        if (!answerDiv) return;
-
-        const isHidden = answerDiv.style.display === 'none' || answerDiv.style.display === '';
-        answerDiv.style.display = isHidden ? 'block' : 'none';
-        btn.textContent = isHidden ? 'Masquer la réponse' : 'Afficher la réponse';
-      });
-    });
   </script>
 </body>
 </html>
