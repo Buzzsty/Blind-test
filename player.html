@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Blind test – Joueur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #1f2933;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #f9fafb;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .status.ok { color: #6ee7b7; }
+    .status.error { color: #fca5a5; }
+
+    .answer-input {
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .answer-input.correct {
+      border-color: #22c55e;
+      background-color: #064e3b;
+      box-shadow: 0 0 0 2px rgba(34,197,94,0.4);
+    }
+
+    .answer-input.error {
+      border-color: #f97373;
+      background-color: #450a0a;
+      box-shadow: 0 0 0 2px rgba(248,113,113,0.4);
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.25s;
+    }
+  </style>
+</head>
+<body>
+  <h1>Blind test – Joueur</h1>
+
+  <div class="card">
+
+    <!-- SECTION CHOIX DE L'ÉQUIPE -->
+    <div id="teamSection">
+      <label>Nom de l'équipe</label>
+      <input id="teamNameInput" type="text" placeholder="Ex : Les Champions">
+      <button id="joinBtn">Rejoindre la partie</button>
+    </div>
+
+    <!-- SECTION DE JEU -->
+    <div id="gameSection" style="display:none;">
+      <p style="font-size:14px; margin-bottom:8px;">Équipe : <strong id="currentTeamLabel"></strong></p>
+
+      <label>Question</label>
+      <select id="questionSelect">
+        <optgroup label="Manche 1 – Comptines">
+          <option value="C1">Comptine 1</option>
+          <option value="C2">Comptine 2</option>
+          <option value="C3">Comptine 3</option>
+          <option value="C4">Comptine 4</option>
+          <option value="C5">Comptine 5</option>
+          <option value="C6">Comptine 6</option>
+          <option value="C7">Comptine 7</option>
+          <option value="C8">Comptine 8</option>
+          <option value="C9">Comptine 9</option>
+          <option value="C10">Comptine 10</option>
+        </optgroup>
+
+        <optgroup label="Manche 2 – Dessins animés">
+          <option value="D1">Dessin animé 1</option>
+          <option value="D2">Dessin animé 2</option>
+          <option value="D3">Dessin animé 3</option>
+          <option value="D4">Dessin animé 4</option>
+          <option value="D5">Dessin animé 5</option>
+          <option value="D6">Dessin animé 6</option>
+          <option value="D7">Dessin animé 7</option>
+          <option value="D8">Dessin animé 8</option>
+          <option value="D9">Dessin animé 9</option>
+          <option value="D10">Dessin animé 10</option>
+          <option value="D11">Dessin animé 11</option>
+          <option value="D12">Dessin animé 12</option>
+          <option value="D13">Dessin animé 13</option>
+          <option value="D14">Dessin animé 14</option>
+          <option value="D15">Dessin animé 15</option>
+        </optgroup>
+      </select>
+
+      <label>Réponse</label>
+      <input id="answerInput" class="answer-input" type="text" placeholder="Tape ta réponse">
+
+      <button id="answerBtn">Valider</button>
+
+      <div id="status" class="status"></div>
+    </div>
+
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    /*********************************************
+     🔥 CONFIG FIREBASE (DÉJÀ INTÉGRÉ)
+    *********************************************/
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjiVAbYPQY5j2S6XxuXWJEPtl_IqVy3cI",
+      authDomain: "blind-test-74568.firebaseapp.com",
+      databaseURL: "https://blind-test-74568-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "blind-test-74568",
+      storageBucket: "blind-test-74568.firebasestorage.app",
+      messagingSenderId: "444315217646",
+      appId: "1:444315217646:web:d16300dd9833a3288d8dff"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const GAME_ID = "blindtest-bbcha";
+
+    /*********************************************
+     📌 RÉPONSES OFFICIELLES
+    *********************************************/
+    const ANSWERS = {
+      C1: "frère jacques",
+      C2: "une souris verte",
+      C3: "pomme de reinette",
+      C4: "ah ! vous dirai-je maman",
+      C5: "alouette, gentille alouette",
+      C6: "sur le pont d’avignon",
+      C7: "la mère michel",
+      C8: "savez-vous planter les choux ?",
+      C9: "il était un petit navire",
+      C10: "la famille tortue",
+
+      D1: "pokémon",
+      D2: "les mystérieuses cités d’or",
+      D3: "inspecteur gadget",
+      D4: "dragon ball z",
+      D5: "dora l’exploratrice",
+      D6: "winnie l’ourson",
+      D7: "bob l’éponge",
+      D8: "totally spies",
+      D9: "olive et tom",
+      D10: "digimon",
+      D11: "denver le dernier dinosaure",
+      D12: "les schtroumpfs",
+      D13: "sailor moon",
+      D14: "les tortues ninja",
+      D15: "les minikeums"
+    };
+
+    function normalize(t) {
+      return (t || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[’']/g, "'")
+        .replace(/\s+/g, " ");
+    }
+
+    function makeId(name) {
+      return name.toLowerCase().trim().replace(/\s+/g, "-");
+    }
+
+    const teamSection = document.getElementById("teamSection");
+    const gameSection = document.getElementById("gameSection");
+    const teamNameInput = document.getElementById("teamNameInput");
+    const joinBtn = document.getElementById("joinBtn");
+    const currentTeamLabel = document.getElementById("currentTeamLabel");
+
+    const questionSelect = document.getElementById("questionSelect");
+    const answerInput = document.getElementById("answerInput");
+    const answerBtn = document.getElementById("answerBtn");
+    const statusDiv = document.getElementById("status");
+
+    let teamId = null;
+    let teamName = null;
+
+    /*********************************************
+     🟦 REJOINDRE LA PARTIE
+    *********************************************/
+    joinBtn.onclick = () => {
+      const name = teamNameInput.value.trim();
+      if (!name) return;
+
+      teamId = makeId(name);
+      teamName = name;
+
+      // Sauvegarde local
+      localStorage.setItem("blindtest_team", name);
+
+      // Enregistrer l'équipe en base
+      db.ref(`games/${GAME_ID}/teams/${teamId}`).update({
+        name: teamName,
+        score: 0
+      });
+
+      currentTeamLabel.textContent = teamName;
+      teamSection.style.display = "none";
+      gameSection.style.display = "block";
+    };
+
+    /*********************************************
+     🟩 MARQUER CORRECT
+    *********************************************/
+    function markCorrect() {
+      answerInput.classList.remove("error");
+      answerInput.classList.add("correct");
+      answerBtn.disabled = true;
+      answerInput.disabled = true;
+    }
+
+    /*********************************************
+     🟥 MAUVAISE RÉPONSE (SHAKE)
+    *********************************************/
+    function flashWrong() {
+      answerInput.classList.add("error", "shake");
+      setTimeout(() => answerInput.classList.remove("shake"), 300);
+    }
+
+    /*********************************************
+     🟧 ENVOI DE LA RÉPONSE
+    *********************************************/
+    answerBtn.onclick = () => {
+      const qid = questionSelect.value;
+      const userAnswer = normalize(answerInput.value);
+      const expected = normalize(ANSWERS[qid]);
+
+      if (userAnswer !== expected) {
+        flashWrong();
+        statusDiv.textContent = "❌ Mauvaise réponse";
+        statusDiv.className = "status error";
+        return;
+      }
+
+      // Bonne réponse → tenter d'être le premier en base
+      const ref = db.ref(`games/${GAME_ID}/winners/${qid}`);
+
+      ref.transaction(current => {
+        if (current && current.teamId) return current;
+        return {
+          teamId,
+          teamName,
+          timestamp: Date.now()
+        };
+      }, (err, committed, snapshot) => {
+        if (!committed) {
+          flashWrong();
+          statusDiv.textContent = "⏳ Trop tard !";
+          statusDiv.className = "status error";
+          return;
+        }
+
+        // Le joueur est bien le gagnant → score +1
+        db.ref(`games/${GAME_ID}/teams/${teamId}/score`)
+          .transaction(s => (s || 0) + 1);
+
+        markCorrect();
+        statusDiv.textContent = "🎉 Bonne réponse !";
+        statusDiv.className = "status ok";
+      });
+    };
+
+    /*********************************************
+     🟦 CHANGEMENT DE QUESTION → reset
+    *********************************************/
+    questionSelect.onchange = () => {
+      answerInput.value = "";
+      answerBtn.disabled = false;
+      answerInput.disabled = false;
+      answerInput.classList.remove("correct", "error");
+      statusDiv.textContent = "";
+    };
+  </script>
+</body>
+</html>
