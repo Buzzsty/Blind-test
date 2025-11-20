@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Blind test – Comptines & Dessins animés</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .layout {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .scores, .questions {
+      background: #1f2933;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .scores {
+      flex: 1 1 300px;
+      min-width: 280px;
+    }
+
+    .questions {
+      flex: 2 1 500px;
+      min-width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .add-team {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .add-team input {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      padding: 6px 10px;
+      background: #2563eb;
+      color: white;
+      font-weight: 500;
+    }
+
+    button.small {
+      padding: 2px 6px;
+      font-size: 13px;
+    }
+
+    button.secondary {
+      background: #4b5563;
+    }
+
+    button.danger {
+      background: #b91c1c;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 6px;
+      text-align: center;
+    }
+
+    th {
+      border-bottom: 1px solid #4b5563;
+    }
+
+    tr:nth-child(even) {
+      background: #111827;
+    }
+
+    .team-name {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .score {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .questions h3 {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #4b5563;
+      padding-bottom: 4px;
+    }
+
+    ol {
+      padding-left: 20px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #111827;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    audio {
+      width: 100%;
+      margin: 4px 0;
+    }
+
+    .answer {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #d1fae5;
+      font-style: italic;
+    }
+
+    .footer-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Blind test – Comptines & Dessins animés</h1>
+
+    <div class="layout">
+      <!-- SECTION SCORES -->
+      <section class="scores">
+        <h2>Scores des équipes</h2>
+
+        <div class="add-team">
+          <input type="text" id="teamNameInput" placeholder="Nom de l'équipe">
+          <button id="addTeamBtn">Ajouter</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Équipe</th>
+              <th>Score</th>
+              <th colspan="3">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="teamsTbody">
+            <!-- Lignes d'équipes générées en JS -->
+          </tbody>
+        </table>
+
+        <div class="footer-hint">
+          💡 Clique sur + / − après chaque extrait pour mettre à jour les scores en direct.
+        </div>
+      </section>
+
+      <!-- SECTION QUESTIONS / EXTRAITS -->
+      <section class="questions">
+        <h2>Extraits du blind test</h2>
+
+        <h3>Manche 1 – Comptines</h3>
+        <ol>
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 1</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <!-- Remplace le src ci-dessous par ton vrai fichier audio -->
+            <audio controls src="audio/comptine1.mp3"></audio>
+            <div class="answer" style="display:none;">Frère Jacques</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 2</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine2.mp3"></audio>
+            <div class="answer" style="display:none;">Une souris verte</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 3</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine3.mp3"></audio>
+            <div class="answer" style="display:none;">Pomme de reinette</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 4</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine4.mp3"></audio>
+            <div class="answer" style="display:none;">Ah ! vous dirai-je maman</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 5</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine5.mp3"></audio>
+            <div class="answer" style="display:none;">Alouette, gentille alouette</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 6</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine6.mp3"></audio>
+            <div class="answer" style="display:none;">Sur le pont d’Avignon</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 7</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine7.mp3"></audio>
+            <div class="answer" style="display:none;">La Mère Michel</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 8</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine8.mp3"></audio>
+            <div class="answer" style="display:none;">Savez-vous planter les choux ?</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 9</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine9.mp3"></audio>
+            <div class="answer" style="display:none;">Il était un petit navire</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Comptine 10</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/comptine10.mp3"></audio>
+            <div class="answer" style="display:none;">La famille Tortue</div>
+          </li>
+        </ol>
+
+        <h3>Manche 2 – Dessins animés de notre enfance</h3>
+        <ol>
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 1</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da1.mp3"></audio>
+            <div class="answer" style="display:none;">Pokémon</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 2</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da2.mp3"></audio>
+            <div class="answer" style="display:none;">Les Mystérieuses Cités d’Or</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 3</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da3.mp3"></audio>
+            <div class="answer" style="display:none;">Inspecteur Gadget</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 4</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da4.mp3"></audio>
+            <div class="answer" style="display:none;">Dragon Ball Z</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 5</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da5.mp3"></audio>
+            <div class="answer" style="display:none;">Dora l’Exploratrice</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 6</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da6.mp3"></audio>
+            <div class="answer" style="display:none;">Winnie l’Ourson</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 7</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da7.mp3"></audio>
+            <div class="answer" style="display:none;">Bob l’Éponge</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 8</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da8.mp3"></audio>
+            <div class="answer" style="display:none;">Totally Spies</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 9</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da9.mp3"></audio>
+            <div class="answer" style="display:none;">Olive et Tom</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 10</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da10.mp3"></audio>
+            <div class="answer" style="display:none;">Digimon</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 11</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da11.mp3"></audio>
+            <div class="answer" style="display:none;">Denver le dernier dinosaure</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 12</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da12.mp3"></audio>
+            <div class="answer" style="display:none;">Les Schtroumpfs</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 13</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da13.mp3"></audio>
+            <div class="answer" style="display:none;">Sailor Moon</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 14</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da14.mp3"></audio>
+            <div class="answer" style="display:none;">Les Tortues Ninja</div>
+          </li>
+
+          <li>
+            <div class="question-header">
+              <span><strong>Dessin animé 15</strong></span>
+              <button class="show-answer-btn small secondary">Afficher la réponse</button>
+            </div>
+            <audio controls src="audio/da15.mp3"></audio>
+            <div class="answer" style="display:none;">Les Minikeums</div>
+          </li>
+        </ol>
+
+        <div class="footer-hint">
+          💡 Tu pourras modifier les titres, l’ordre, les réponses et les fichiers audio directement dans ce fichier HTML.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ======= GESTION DES ÉQUIPES & SCORES =======
+    const teamNameInput = document.getElementById('teamNameInput');
+    const addTeamBtn = document.getElementById('addTeamBtn');
+    const teamsTbody = document.getElementById('teamsTbody');
+
+    let teams = []; // {id, name, score}
+
+    function renderTeams() {
+      teamsTbody.innerHTML = "";
+      teams.forEach(team => {
+        const tr = document.createElement('tr');
+
+        const tdName = document.createElement('td');
+        tdName.className = 'team-name';
+        tdName.textContent = team.name;
+
+        const tdScore = document.createElement('td');
+        tdScore.className = 'score';
+        tdScore.textContent = team.score;
+
+        const tdMinus = document.createElement('td');
+        const btnMinus = document.createElement('button');
+        btnMinus.textContent = "−";
+        btnMinus.className = "small secondary";
+        btnMinus.addEventListener('click', () => updateScore(team.id, -1));
+        tdMinus.appendChild(btnMinus);
+
+        const tdPlus = document.createElement('td');
+        const btnPlus = document.createElement('button');
+        btnPlus.textContent = "+";
+        btnPlus.className = "small";
+        btnPlus.addEventListener('click', () => updateScore(team.id, 1));
+        tdPlus.appendChild(btnPlus);
+
+        const tdRemove = document.createElement('td');
+        const btnRemove = document.createElement('button');
+        btnRemove.textContent = "×";
+        btnRemove.className = "small danger";
+        btnRemove.addEventListener('click', () => removeTeam(team.id));
+        tdRemove.appendChild(btnRemove);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdScore);
+        tr.appendChild(tdMinus);
+        tr.appendChild(tdPlus);
+        tr.appendChild(tdRemove);
+
+        teamsTbody.appendChild(tr);
+      });
+    }
+
+    function addTeam(name) {
+      if (!name) return;
+      const team = {
+        id: Date.now().toString() + Math.random().toString(16).slice(2),
+        name: name,
+        score: 0
+      };
+      teams.push(team);
+      renderTeams();
+    }
+
+    function updateScore(id, delta) {
+      const team = teams.find(t => t.id === id);
+      if (!team) return;
+      team.score += delta;
+      if (team.score < 0) team.score = 0;
+      renderTeams();
+    }
+
+    function removeTeam(id) {
+      teams = teams.filter(t => t.id !== id);
+      renderTeams();
+    }
+
+    addTeamBtn.addEventListener('click', () => {
+      const name = teamNameInput.value.trim();
+      if (!name) return;
+      addTeam(name);
+      teamNameInput.value = "";
+      teamNameInput.focus();
+    });
+
+    teamNameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        addTeamBtn.click();
+      }
+    });
+
+    // ======= AFFICHAGE / MASQUAGE DES RÉPONSES =======
+    document.querySelectorAll('.show-answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const li = btn.closest('li');
+        if (!li) return;
+        const answerDiv = li.querySelector('.answer');
+        if (!answerDiv) return;
+
+        const isHidden = answerDiv.style.display === 'none' || answerDiv.style.display === '';
+        answerDiv.style.display = isHidden ? 'block' : 'none';
+        btn.textContent = isHidden ? 'Masquer la réponse' : 'Afficher la réponse';
+      });
+    });
+  </script>
+</body>
+</html>
