@@ -72,8 +72,9 @@
       min-height: 18px;
     }
 
-    .status.ok { color: #6ee7b7; }
-    .status.error { color: #fca5a5; }
+    .status.ok { color: #6ee7b7; }     /* vert */
+    .status.error { color: #fca5a5; }  /* rouge */
+    .status.locked { color: #fbbf24; } /* orange */
 
     .answer-input {
       transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
@@ -91,6 +92,12 @@
       box-shadow: 0 0 0 2px rgba(248,113,113,0.4);
     }
 
+    .answer-input.locked {
+      border-color: #fbbf24;
+      background-color: #451a03;
+      box-shadow: 0 0 0 2px rgba(251,191,36,0.4);
+    }
+
     @keyframes shake {
       0% { transform: translateX(0); }
       20% { transform: translateX(-4px); }
@@ -100,9 +107,7 @@
       100% { transform: translateX(0); }
     }
 
-    .shake {
-      animation: shake 0.25s;
-    }
+    .shake { animation: shake 0.25s; }
   </style>
 </head>
 <body>
@@ -119,7 +124,9 @@
 
     <!-- SECTION DE JEU -->
     <div id="gameSection" style="display:none;">
-      <p style="font-size:14px; margin-bottom:8px;">Équipe : <strong id="currentTeamLabel"></strong></p>
+      <p style="font-size:14px; margin-bottom:8px;">Équipe : 
+        <strong id="currentTeamLabel"></strong>
+      </p>
 
       <label>Question</label>
       <select id="questionSelect">
@@ -162,16 +169,15 @@
 
       <div id="status" class="status"></div>
     </div>
-
   </div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  <script>
+    <script>
     /*********************************************
-     🔥 CONFIG FIREBASE (DÉJÀ INTÉGRÉ)
+     🔥 CONFIG FIREBASE
     *********************************************/
     const firebaseConfig = {
       apiKey: "AIzaSyAjiVAbYPQY5j2S6XxuXWJEPtl_IqVy3cI",
@@ -186,6 +192,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const GAME_ID = "blindtest-bbcha";
+
 
     /*********************************************
      📌 RÉPONSES OFFICIELLES
@@ -231,6 +238,10 @@
       return name.toLowerCase().trim().replace(/\s+/g, "-");
     }
 
+
+    /*********************************************
+     🔵 VARIABLES DOM
+    *********************************************/
     const teamSection = document.getElementById("teamSection");
     const gameSection = document.getElementById("gameSection");
     const teamNameInput = document.getElementById("teamNameInput");
@@ -244,6 +255,7 @@
 
     let teamId = null;
     let teamName = null;
+
 
     /*********************************************
      🟦 REJOINDRE LA PARTIE
@@ -267,27 +279,78 @@
       currentTeamLabel.textContent = teamName;
       teamSection.style.display = "none";
       gameSection.style.display = "block";
+
+      // Observer la question sélectionnée
+      watchWinner(questionSelect.value);
     };
 
+
     /*********************************************
-     🟩 MARQUER CORRECT
+     🟩 MARQUER CORRECT (VERT)
     *********************************************/
     function markCorrect() {
-      answerInput.classList.remove("error");
+      answerInput.classList.remove("error", "locked");
       answerInput.classList.add("correct");
       answerBtn.disabled = true;
       answerInput.disabled = true;
     }
 
+
     /*********************************************
-     🟥 MAUVAISE RÉPONSE (SHAKE)
+     🟧 BLOQUER POUR LES AUTRES (ORANGE)
+    *********************************************/
+    function markLocked(winnerName) {
+      answerInput.classList.remove("correct", "error");
+      answerInput.classList.add("locked");
+      answerBtn.disabled = true;
+      answerInput.disabled = true;
+
+      statusDiv.textContent = `⚠️ ${winnerName} a déjà gagné`;
+      statusDiv.className = "status locked";
+    }
+
+
+    /*********************************************
+     🟥 MAUVAISE RÉPONSE (SHAKE ROUGE)
     *********************************************/
     function flashWrong() {
       answerInput.classList.add("error", "shake");
       setTimeout(() => answerInput.classList.remove("shake"), 300);
     }
 
+
     /*********************************************
+     🟦 OBSERVER EN TEMPS RÉEL SI UN GAGNANT EXISTE
+    *********************************************/
+    function watchWinner(questionId) {
+      const ref = db.ref(`games/${GAME_ID}/winners/${questionId}`);
+
+      ref.on("value", snapshot => {
+        const winner = snapshot.val();
+
+        if (!winner) {
+          // Pas encore de gagnant → tout actif
+          answerInput.disabled = false;
+          answerBtn.disabled = false;
+          answerInput.classList.remove("correct", "error", "locked");
+          statusDiv.textContent = "";
+          return;
+        }
+
+        // Si le gagnant existe :
+        if (winner.teamId === teamId) {
+          // NOUS SOMMES LE GAGNANT → vert
+          markCorrect();
+          statusDiv.textContent = "🎉 Bonne réponse (gagnant) !";
+          statusDiv.className = "status ok";
+        } else {
+          // Un AUTRE joueur a gagné → orange
+          markLocked(winner.teamName);
+        }
+      });
+    }
+
+          /*********************************************
      🟧 ENVOI DE LA RÉPONSE
     *********************************************/
     answerBtn.onclick = () => {
@@ -295,50 +358,70 @@
       const userAnswer = normalize(answerInput.value);
       const expected = normalize(ANSWERS[qid]);
 
-      if (userAnswer !== expected) {
-        flashWrong();
-        statusDiv.textContent = "❌ Mauvaise réponse";
-        statusDiv.className = "status error";
-        return;
-      }
+      // 1) Vérifier si la question a déjà un gagnant
+      db.ref(`games/${GAME_ID}/winners/${qid}`).once("value").then(snap => {
+        if (snap.exists()) {
+          const winner = snap.val();
+          if (winner.teamId !== teamId) {
+            // → un autre a gagné, on bloque immédiatement
+            markLocked(winner.teamName);
+            return;
+          }
+        }
 
-      // Bonne réponse → tenter d'être le premier en base
-      const ref = db.ref(`games/${GAME_ID}/winners/${qid}`);
-
-      ref.transaction(current => {
-        if (current && current.teamId) return current;
-        return {
-          teamId,
-          teamName,
-          timestamp: Date.now()
-        };
-      }, (err, committed, snapshot) => {
-        if (!committed) {
+        // 2) Vérifier si la réponse est correcte
+        if (userAnswer !== expected) {
           flashWrong();
-          statusDiv.textContent = "⏳ Trop tard !";
+          statusDiv.textContent = "❌ Mauvaise réponse";
           statusDiv.className = "status error";
           return;
         }
 
-        // Le joueur est bien le gagnant → score +1
-        db.ref(`games/${GAME_ID}/teams/${teamId}/score`)
-          .transaction(s => (s || 0) + 1);
+        // 3) Essayer d'être le premier gagnant
+        const ref = db.ref(`games/${GAME_ID}/winners/${qid}`);
+        ref.transaction(current => {
+          if (current && current.teamId) return current;
+          return {
+            teamId,
+            teamName,
+            timestamp: Date.now()
+          };
+        }, (err, committed, snapshot) => {
+          if (!committed) {
+            // Trop tard → quelqu'un a gagné avant toi
+            const w = snapshot.val();
+            markLocked(w.teamName);
+            return;
+          }
 
-        markCorrect();
-        statusDiv.textContent = "🎉 Bonne réponse !";
-        statusDiv.className = "status ok";
+          // 4) C'est BON → nous sommes le premier gagnant
+          db.ref(`games/${GAME_ID}/teams/${teamId}/score`)
+            .transaction(s => (s || 0) + 1);
+
+          markCorrect();
+          statusDiv.textContent = "🎉 Bonne réponse !";
+          statusDiv.className = "status ok";
+        });
       });
     };
 
+
     /*********************************************
-     🟦 CHANGEMENT DE QUESTION → reset
+     🟦 CHANGEMENT DE QUESTION → RESET + OBSERVER
     *********************************************/
     questionSelect.onchange = () => {
+      const qid = questionSelect.value;
+
+      // Reset visuel
       answerInput.value = "";
       answerBtn.disabled = false;
       answerInput.disabled = false;
-      answerInput.classList.remove("correct", "error");
+      answerInput.classList.remove("correct", "error", "locked");
       statusDiv.textContent = "";
+      statusDiv.className = "status";
+
+      // Observer le vainqueur
+      watchWinner(qid);
     };
   </script>
 </body>
