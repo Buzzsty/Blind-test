@@ -163,17 +163,10 @@
       margin: 4px 0;
     }
 
-    .answer {
-      margin-top: 4px;
-      font-size: 13px;
-      color: #d1fae5;
-      font-style: italic;
-    }
-
     .winner {
       margin-top: 4px;
       font-size: 13px;
-      color: #facc15; /* jaune */
+      color: #fbbf24; /* orange */
     }
 
     .footer-hint {
@@ -191,7 +184,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Blind test – Comptines & Dessins animés</h1>
+    <h1>Blind test – Comptines, Disney & Dessins animés</h1>
 
     <div class="layout">
       <!-- SECTION SCORES -->
@@ -205,11 +198,11 @@
 
         <table>
           <thead>
-            <tr>
-              <th>Équipe</th>
-              <th>Score</th>
-              <th colspan="3">Actions</th>
-            </tr>
+          <tr>
+            <th>Équipe</th>
+            <th>Score</th>
+            <th colspan="3">Actions</th>
+          </tr>
           </thead>
           <tbody id="teamsTbody"></tbody>
         </table>
@@ -223,14 +216,17 @@
       <section class="questions">
         <h2>Extraits du blind test</h2>
 
-        <h3>Manche 1 – Comptines</h3>
-        <ol id="listC"></ol>
+        <h3>Comptines bébé (5)</h3>
+        <ol id="listBebe"></ol>
 
-        <h3>Manche 2 – Dessins animés</h3>
-        <ol id="listD"></ol>
+        <h3>Chansons Disney (12) – deviner le film</h3>
+        <ol id="listDisney"></ol>
+
+        <h3>Dessins animés de notre enfance (13)</h3>
+        <ol id="listDA"></ol>
 
         <div class="footer-hint">
-          💡 Le nom du gagnant s'affichera automatiquement sous chaque extrait.
+          💡 Le nom du gagnant s'affiche automatiquement sous chaque extrait.
         </div>
       </section>
     </div>
@@ -242,7 +238,7 @@
 
   <script>
     /****************************************************
-     * 🔥 CONFIG FIREBASE (DÉJÀ PRÊT)
+     * 🔥 CONFIG FIREBASE
      ****************************************************/
     const firebaseConfig = {
       apiKey: "AIzaSyAjiVAbYPQY5j2S6XxuXWJEPtl_IqVy3cI",
@@ -259,48 +255,67 @@
     const GAME_ID = "blindtest-bbcha";
 
     /****************************************************
-     * 📌 Création dynamique des questions
+     * 📌 DÉFINITION DES QUESTIONS
+     * (Adapter les noms de fichiers audio)
      ****************************************************/
-    const comptines = [
-      "Frère Jacques", "Une souris verte", "Pomme de reinette",
-      "Ah ! vous dirai-je maman", "Alouette, gentille alouette",
-      "Sur le pont d’Avignon", "La Mère Michel",
-      "Savez-vous planter les choux ?", "Il était un petit navire",
-      "La famille Tortue"
+    const questionsBebe = [
+      { id: "B1", label: "Comptine bébé 1", audio: "bebe1.mp3" },
+      { id: "B2", label: "Comptine bébé 2", audio: "bebe2.mp3" },
+      { id: "B3", label: "Comptine bébé 3", audio: "bebe3.mp3" },
+      { id: "B4", label: "Comptine bébé 4", audio: "bebe4.mp3" },
+      { id: "B5", label: "Comptine bébé 5", audio: "bebe5.mp3" }
     ];
 
-    const dessins = [
-      "Pokémon", "Les Mystérieuses Cités d’Or", "Inspecteur Gadget",
-      "Dragon Ball Z", "Dora l’Exploratrice", "Winnie l’Ourson",
-      "Bob l’Éponge", "Totally Spies", "Olive et Tom",
-      "Digimon", "Denver le dernier dinosaure", "Les Schtroumpfs",
-      "Sailor Moon", "Les Tortues Ninja", "Les Minikeums"
+    const questionsDisney = [
+      { id: "DIS1", label: "Disney 1 – Le Roi Lion", audio: "disney1.mp3" },
+      { id: "DIS2", label: "Disney 2 – La Reine des Neiges", audio: "disney2.mp3" },
+      { id: "DIS3", label: "Disney 3 – Aladdin", audio: "disney3.mp3" },
+      { id: "DIS4", label: "Disney 4 – La Petite Sirène", audio: "disney4.mp3" },
+      { id: "DIS5", label: "Disney 5 – Mulan", audio: "disney5.mp3" },
+      { id: "DIS6", label: "Disney 6 – Hercule", audio: "disney6.mp3" },
+      { id: "DIS7", label: "Disney 7 – Vaiana", audio: "disney7.mp3" },
+      { id: "DIS8", label: "Disney 8 – Raiponce", audio: "disney8.mp3" },
+      { id: "DIS9", label: "Disney 9 – La Belle et la Bête", audio: "disney9.mp3" },
+      { id: "DIS10", label: "Disney 10 – Tarzan", audio: "disney10.mp3" },
+      { id: "DIS11", label: "Disney 11 – Coco", audio: "disney11.mp3" },
+      { id: "DIS12", label: "Disney 12 – Toy Story", audio: "disney12.mp3" }
     ];
 
-    const listC = document.getElementById("listC");
-    const listD = document.getElementById("listD");
+    const questionsDA = [
+      { id: "DA1", label: "Dessin animé 1 – Pokémon", audio: "da1.mp3" },
+      { id: "DA2", label: "Dessin animé 2 – Les Mystérieuses Cités d’Or", audio: "da2.mp3" },
+      { id: "DA3", label: "Dessin animé 3 – Inspecteur Gadget", audio: "da3.mp3" },
+      { id: "DA4", label: "Dessin animé 4 – Dragon Ball Z", audio: "da4.mp3" },
+      { id: "DA5", label: "Dessin animé 5 – Dora l’Exploratrice", audio: "da5.mp3" },
+      { id: "DA6", label: "Dessin animé 6 – Winnie l’Ourson", audio: "da6.mp3" },
+      { id: "DA7", label: "Dessin animé 7 – Bob l’Éponge", audio: "da7.mp3" },
+      { id: "DA8", label: "Dessin animé 8 – Totally Spies", audio: "da8.mp3" },
+      { id: "DA9", label: "Dessin animé 9 – Olive et Tom", audio: "da9.mp3" },
+      { id: "DA10", label: "Dessin animé 10 – Digimon", audio: "da10.mp3" },
+      { id: "DA11", label: "Dessin animé 11 – Denver le dernier dinosaure", audio: "da11.mp3" },
+      { id: "DA12", label: "Dessin animé 12 – Les Schtroumpfs", audio: "da12.mp3" },
+      { id: "DA13", label: "Dessin animé 13 – Sailor Moon", audio: "da13.mp3" }
+    ];
 
-    function createQuestionLi(qid, title, audiofile) {
+    const listBebe = document.getElementById("listBebe");
+    const listDisney = document.getElementById("listDisney");
+    const listDA = document.getElementById("listDA");
+
+    function createQuestionLi(q) {
       const li = document.createElement("li");
       li.innerHTML = `
         <div class="question-header">
-          <span><strong>${title}</strong></span>
+          <span><strong>${q.label}</strong></span>
         </div>
-
-        <audio controls src="audio/${audiofile}"></audio>
-
-        <div class="winner" id="winner-${qid}"></div>
+        <audio controls src="audio/${q.audio}"></audio>
+        <div class="winner" id="winner-${q.id}"></div>
       `;
       return li;
     }
 
-    comptines.forEach((name, i) => {
-      listC.appendChild(createQuestionLi("C"+(i+1), name, "comptine"+(i+1)+".mp3"));
-    });
-
-    dessins.forEach((name, i) => {
-      listD.appendChild(createQuestionLi("D"+(i+1), name, "da"+(i+1)+".mp3"));
-    });
+    questionsBebe.forEach(q => listBebe.appendChild(createQuestionLi(q)));
+    questionsDisney.forEach(q => listDisney.appendChild(createQuestionLi(q)));
+    questionsDA.forEach(q => listDA.appendChild(createQuestionLi(q)));
 
     /****************************************************
      * 👥 Gestion des équipes + scores
@@ -313,13 +328,13 @@
 
     function renderTeams() {
       teamsTbody.innerHTML = "";
-      const entries = Object.entries(teamsCache).sort((a,b)=>b[1].score - a[1].score);
+      const entries = Object.entries(teamsCache).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
 
       for (const [id, team] of entries) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td class="team-name">${team.name}</td>
-          <td class="score">${team.score}</td>
+          <td class="score">${team.score || 0}</td>
           <td><button class="small secondary" onclick="updateScore('${id}', -1)">−</button></td>
           <td><button class="small" onclick="updateScore('${id}', 1)">+</button></td>
           <td><button class="small danger" onclick="removeTeam('${id}')">×</button></td>
@@ -328,23 +343,29 @@
       }
     }
 
-    function makeId(name){
-      return name.toLowerCase().replace(/\s+/g,"-");
+    function makeTeamId(name) {
+      return name.toLowerCase().trim().replace(/\s+/g, "-");
     }
 
     addTeamBtn.onclick = () => {
       const name = teamNameInput.value.trim();
       if (!name) return;
-      const id = makeId(name);
-      db.ref(`games/${GAME_ID}/teams/${id}`).set({ name, score: 0 });
+      const id = makeTeamId(name);
+      db.ref(`games/${GAME_ID}/teams/${id}`).update({
+        name,
+        score: teamsCache[id]?.score || 0
+      });
       teamNameInput.value = "";
     };
 
-    function updateScore(id, delta){
-      db.ref(`games/${GAME_ID}/teams/${id}/score`).transaction(s => (s||0) + delta);
+    function updateScore(id, delta) {
+      db.ref(`games/${GAME_ID}/teams/${id}/score`).transaction(s => {
+        const newScore = (s || 0) + delta;
+        return newScore < 0 ? 0 : newScore;
+      });
     }
 
-    function removeTeam(id){
+    function removeTeam(id) {
       db.ref(`games/${GAME_ID}/teams/${id}`).remove();
     }
 
@@ -358,14 +379,13 @@
      ****************************************************/
     db.ref(`games/${GAME_ID}/winners`).on("value", snap => {
       const data = snap.val() || {};
-      for (const qid in data) {
-        const div = document.getElementById("winner-"+qid);
+      Object.keys(data).forEach(qid => {
+        const div = document.getElementById("winner-" + qid);
         if (div) {
           div.textContent = "🏆 Gagnant : " + data[qid].teamName;
         }
-      }
+      });
     });
-
   </script>
 </body>
 </html>
