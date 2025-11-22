@@ -108,6 +108,21 @@
     }
 
     .shake { animation: shake 0.25s; }
+
+    .popup-winner {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #111827;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      font-size: 16px;
+      z-index: 9999;
+      border: 1px solid #facc15;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -124,41 +139,49 @@
 
     <!-- SECTION DE JEU -->
     <div id="gameSection" style="display:none;">
-      <p style="font-size:14px; margin-bottom:8px;">Équipe : 
+      <p style="font-size:14px; margin-bottom:8px;">Équipe :
         <strong id="currentTeamLabel"></strong>
       </p>
 
       <label>Question</label>
       <select id="questionSelect">
-        <optgroup label="Manche 1 – Comptines">
-          <option value="C1">Comptine 1</option>
-          <option value="C2">Comptine 2</option>
-          <option value="C3">Comptine 3</option>
-          <option value="C4">Comptine 4</option>
-          <option value="C5">Comptine 5</option>
-          <option value="C6">Comptine 6</option>
-          <option value="C7">Comptine 7</option>
-          <option value="C8">Comptine 8</option>
-          <option value="C9">Comptine 9</option>
-          <option value="C10">Comptine 10</option>
+        <optgroup label="Comptines bébé">
+          <option value="B1">Comptine bébé 1</option>
+          <option value="B2">Comptine bébé 2</option>
+          <option value="B3">Comptine bébé 3</option>
+          <option value="B4">Comptine bébé 4</option>
+          <option value="B5">Comptine bébé 5</option>
         </optgroup>
 
-        <optgroup label="Manche 2 – Dessins animés">
-          <option value="D1">Dessin animé 1</option>
-          <option value="D2">Dessin animé 2</option>
-          <option value="D3">Dessin animé 3</option>
-          <option value="D4">Dessin animé 4</option>
-          <option value="D5">Dessin animé 5</option>
-          <option value="D6">Dessin animé 6</option>
-          <option value="D7">Dessin animé 7</option>
-          <option value="D8">Dessin animé 8</option>
-          <option value="D9">Dessin animé 9</option>
-          <option value="D10">Dessin animé 10</option>
-          <option value="D11">Dessin animé 11</option>
-          <option value="D12">Dessin animé 12</option>
-          <option value="D13">Dessin animé 13</option>
-          <option value="D14">Dessin animé 14</option>
-          <option value="D15">Dessin animé 15</option>
+        <optgroup label="Chansons Disney (deviner le film)">
+          <option value="DIS1">Disney 1</option>
+          <option value="DIS2">Disney 2</option>
+          <option value="DIS3">Disney 3</option>
+          <option value="DIS4">Disney 4</option>
+          <option value="DIS5">Disney 5</option>
+          <option value="DIS6">Disney 6</option>
+          <option value="DIS7">Disney 7</option>
+          <option value="DIS8">Disney 8</option>
+          <option value="DIS9">Disney 9</option>
+          <option value="DIS10">Disney 10</option>
+          <option value="DIS11">Disney 11</option>
+          <option value="DIS12">Disney 12</option>
+        </optgroup>
+
+        <optgroup label="Dessins animés de notre enfance">
+          <option value="DA1">Dessin animé 1</option>
+          <option value="DA2">Dessin animé 2</option>
+          <option value="DA3">Dessin animé 3</option>
+          <option value="DA4">Dessin animé 4</option>
+          <option value="DA5">Dessin animé 5</option>
+          <option value="DA6">Dessin animé 6</option>
+          <option value="DA7">Dessin animé 7</option>
+          <option value="DA8">Dessin animé 8</option>
+          <option value="DA9">Dessin animé 9</option>
+          <option value="DA10">Dessin animé 10</option>
+          <option value="DA11">Dessin animé 11</option>
+          <option value="DA12">Dessin animé 12</option>
+          <option value="DA13">Dessin animé 13</option>
         </optgroup>
       </select>
 
@@ -171,11 +194,14 @@
     </div>
   </div>
 
+  <!-- POPUP GAGNANT -->
+  <div id="popupWinner" class="popup-winner"></div>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-    <script>
+  <script>
     /*********************************************
      🔥 CONFIG FIREBASE
     *********************************************/
@@ -196,38 +222,51 @@
 
     /*********************************************
      📌 RÉPONSES OFFICIELLES
+     (À ADAPTER À TES CHANSONS)
     *********************************************/
     const ANSWERS = {
-      C1: "frère jacques",
-      C2: "une souris verte",
-      C3: "pomme de reinette",
-      C4: "ah ! vous dirai-je maman",
-      C5: "alouette, gentille alouette",
-      C6: "sur le pont d’avignon",
-      C7: "la mère michel",
-      C8: "savez-vous planter les choux ?",
-      C9: "il était un petit navire",
-      C10: "la famille tortue",
+      // 5 comptines bébé
+      B1: "comptine bébé 1",
+      B2: "comptine bébé 2",
+      B3: "comptine bébé 3",
+      B4: "comptine bébé 4",
+      B5: "comptine bébé 5",
 
-      D1: "pokémon",
-      D2: "les mystérieuses cités d’or",
-      D3: "inspecteur gadget",
-      D4: "dragon ball z",
-      D5: "dora l’exploratrice",
-      D6: "winnie l’ourson",
-      D7: "bob l’éponge",
-      D8: "totally spies",
-      D9: "olive et tom",
-      D10: "digimon",
-      D11: "denver le dernier dinosaure",
-      D12: "les schtroumpfs",
-      D13: "sailor moon",
-      D14: "les tortues ninja",
-      D15: "les minikeums"
+      // 12 chansons Disney (réponse = titre du film)
+      DIS1: "le roi lion",
+      DIS2: "la reine des neiges",
+      DIS3: "aladdin",
+      DIS4: "la petite sirène",
+      DIS5: "mulan",
+      DIS6: "hercule",
+      DIS7: "vaiana",
+      DIS8: "raiponce",
+      DIS9: "la belle et la bête",
+      DIS10: "tarzan",
+      DIS11: "coco",
+      DIS12: "toy story",
+
+      // 13 dessins animés de notre enfance
+      DA1: "pokémon",
+      DA2: "les mystérieuses cités d’or",
+      DA3: "inspecteur gadget",
+      DA4: "dragon ball z",
+      DA5: "dora l’exploratrice",
+      DA6: "winnie l’ourson",
+      DA7: "bob l’éponge",
+      DA8: "totally spies",
+      DA9: "olive et tom",
+      DA10: "digimon",
+      DA11: "denver le dernier dinosaure",
+      DA12: "les schtroumpfs",
+      DA13: "sailor moon"
     };
 
     function normalize(t) {
       return (t || "")
+        .toString()
+        .normalize("NFD")                     // séparer lettres / accents
+        .replace(/[\u0300-\u036f]/g, "")      // supprimer les accents
         .toLowerCase()
         .trim()
         .replace(/[’']/g, "'")
@@ -237,7 +276,6 @@
     function makeId(name) {
       return name.toLowerCase().trim().replace(/\s+/g, "-");
     }
-
 
     /*********************************************
      🔵 VARIABLES DOM
@@ -252,10 +290,19 @@
     const answerInput = document.getElementById("answerInput");
     const answerBtn = document.getElementById("answerBtn");
     const statusDiv = document.getElementById("status");
+    const popupWinner = document.getElementById("popupWinner");
 
     let teamId = null;
     let teamName = null;
+    const lastWinnerByQuestion = {}; // pour éviter popup en boucle
 
+    function showWinnerPopup(message) {
+      popupWinner.textContent = message;
+      popupWinner.style.display = "block";
+      setTimeout(() => {
+        popupWinner.style.display = "none";
+      }, 2000);
+    }
 
     /*********************************************
      🟦 REJOINDRE LA PARTIE
@@ -267,10 +314,8 @@
       teamId = makeId(name);
       teamName = name;
 
-      // Sauvegarde local
       localStorage.setItem("blindtest_team", name);
 
-      // Enregistrer l'équipe en base
       db.ref(`games/${GAME_ID}/teams/${teamId}`).update({
         name: teamName,
         score: 0
@@ -280,7 +325,6 @@
       teamSection.style.display = "none";
       gameSection.style.display = "block";
 
-      // Observer la question sélectionnée
       watchWinner(questionSelect.value);
     };
 
@@ -295,7 +339,6 @@
       answerInput.disabled = true;
     }
 
-
     /*********************************************
      🟧 BLOQUER POUR LES AUTRES (ORANGE)
     *********************************************/
@@ -309,7 +352,6 @@
       statusDiv.className = "status locked";
     }
 
-
     /*********************************************
      🟥 MAUVAISE RÉPONSE (SHAKE ROUGE)
     *********************************************/
@@ -317,7 +359,6 @@
       answerInput.classList.add("error", "shake");
       setTimeout(() => answerInput.classList.remove("shake"), 300);
     }
-
 
     /*********************************************
      🟦 OBSERVER EN TEMPS RÉEL SI UN GAGNANT EXISTE
@@ -329,28 +370,32 @@
         const winner = snapshot.val();
 
         if (!winner) {
-          // Pas encore de gagnant → tout actif
           answerInput.disabled = false;
           answerBtn.disabled = false;
           answerInput.classList.remove("correct", "error", "locked");
           statusDiv.textContent = "";
+          statusDiv.className = "status";
+          lastWinnerByQuestion[questionId] = null;
           return;
         }
 
-        // Si le gagnant existe :
+        // popup pour tout le monde (1 seule fois par gagnant)
+        if (lastWinnerByQuestion[questionId] !== winner.teamId) {
+          showWinnerPopup(`🎵 Gagnant : ${winner.teamName}`);
+          lastWinnerByQuestion[questionId] = winner.teamId;
+        }
+
         if (winner.teamId === teamId) {
-          // NOUS SOMMES LE GAGNANT → vert
           markCorrect();
           statusDiv.textContent = "🎉 Bonne réponse (gagnant) !";
           statusDiv.className = "status ok";
         } else {
-          // Un AUTRE joueur a gagné → orange
           markLocked(winner.teamName);
         }
       });
     }
 
-          /*********************************************
+    /*********************************************
      🟧 ENVOI DE LA RÉPONSE
     *********************************************/
     answerBtn.onclick = () => {
@@ -358,18 +403,16 @@
       const userAnswer = normalize(answerInput.value);
       const expected = normalize(ANSWERS[qid]);
 
-      // 1) Vérifier si la question a déjà un gagnant
+      // vérifier s'il y a déjà un gagnant
       db.ref(`games/${GAME_ID}/winners/${qid}`).once("value").then(snap => {
         if (snap.exists()) {
           const winner = snap.val();
           if (winner.teamId !== teamId) {
-            // → un autre a gagné, on bloque immédiatement
             markLocked(winner.teamName);
             return;
           }
         }
 
-        // 2) Vérifier si la réponse est correcte
         if (userAnswer !== expected) {
           flashWrong();
           statusDiv.textContent = "❌ Mauvaise réponse";
@@ -377,7 +420,6 @@
           return;
         }
 
-        // 3) Essayer d'être le premier gagnant
         const ref = db.ref(`games/${GAME_ID}/winners/${qid}`);
         ref.transaction(current => {
           if (current && current.teamId) return current;
@@ -388,13 +430,11 @@
           };
         }, (err, committed, snapshot) => {
           if (!committed) {
-            // Trop tard → quelqu'un a gagné avant toi
             const w = snapshot.val();
             markLocked(w.teamName);
             return;
           }
 
-          // 4) C'est BON → nous sommes le premier gagnant
           db.ref(`games/${GAME_ID}/teams/${teamId}/score`)
             .transaction(s => (s || 0) + 1);
 
@@ -405,14 +445,12 @@
       });
     };
 
-
     /*********************************************
      🟦 CHANGEMENT DE QUESTION → RESET + OBSERVER
     *********************************************/
     questionSelect.onchange = () => {
       const qid = questionSelect.value;
 
-      // Reset visuel
       answerInput.value = "";
       answerBtn.disabled = false;
       answerInput.disabled = false;
@@ -420,7 +458,6 @@
       statusDiv.textContent = "";
       statusDiv.className = "status";
 
-      // Observer le vainqueur
       watchWinner(qid);
     };
   </script>
