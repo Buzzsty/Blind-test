@@ -154,15 +154,14 @@
         </optgroup>
 
         <optgroup label="Chansons Disney (deviner le film)">
-        <option value="DIS1">Disney 1</option>
-        <option value="DIS2">Disney 2</option>
-        <option value="DIS3">Disney 3</option>
-        <option value="DIS4">Disney 4</option>
-        <option value="DIS5">Disney 5</option>
-        <option value="DIS6">Disney 6</option>
-        <option value="DIS7">Disney 7</option>
-      </optgroup>
-
+          <option value="DIS1">Disney 1</option>
+          <option value="DIS2">Disney 2</option>
+          <option value="DIS3">Disney 3</option>
+          <option value="DIS4">Disney 4</option>
+          <option value="DIS5">Disney 5</option>
+          <option value="DIS6">Disney 6</option>
+          <option value="DIS7">Disney 7</option>
+        </optgroup>
 
         <optgroup label="Dessins animés de notre enfance">
           <option value="DA1">Dessin animé 1</option>
@@ -224,11 +223,11 @@
       // 5 comptines bébé
       B1: "Ah les crocodiles",
       B2: "Au clair de la lune",
-      B3: "Frère Jacques",
-      B4: "Il était un petit navire",
+      B3: "Frère Jacques",
+      B4: "Il était un petit navire",
       B5: "Les roues de l’autobus",
 
-      // 12 chansons Disney (réponse = titre du film)
+      // 7 chansons Disney (réponse = titre du film)
       DIS1: "Coco",
       DIS2: "Ratatouille",
       DIS3: "Livre de la jungle",
@@ -236,7 +235,6 @@
       DIS5: "Tarzan",
       DIS6: "Le Roi Lion",
       DIS7: "Mulan",
-    ,
 
       // 13 dessins animés de notre enfance
       DA1: "Ratz",
@@ -244,7 +242,7 @@
       DA3: "Code Lyoko",
       DA4: "Les simpson",
       DA5: "Jumanji",
-      DA6: "Bob l'éponge.mp3",
+      DA6: "Bob l'éponge",
       DA7: "Dragon Ball",
       DA8: "Les mystérieuses cités d'or",
       DA9: "Titeuf",
@@ -439,7 +437,7 @@
 
     /*********************************************
      🟦 CHANGEMENT DE QUESTION → RESET + OBSERVER
-    *********************************************/
+   *********************************************/
     questionSelect.onchange = () => {
       const qid = questionSelect.value;
 
